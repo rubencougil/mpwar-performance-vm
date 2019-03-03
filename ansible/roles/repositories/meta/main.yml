@@ -1,6 +1,0 @@
-dependencies:
-  - role: AerisCloud.repos
-    repositories:
-      centos6:
-        - epel
-        - remi
