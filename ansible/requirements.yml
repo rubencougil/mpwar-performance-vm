@@ -1,0 +1,20 @@
+#install Roles from ansible galaxy
+
+- src: geerlingguy.ntp
+- src: geerlingguy.apache
+- src: geerlingguy.php
+- src: geerlingguy.composer
+- src: geerlingguy.mysql
+- src: AerisCloud.repos
+- src: geerlingguy.repo-remi
+- src: geerlingguy.php-versions
+- src: geerlingguy.git
+- src: ferrarimarco.nano
+- src: geerlingguy.java
+- src: rockandska.erlang
+- src: geerlingguy.blackfire
+- src: geerlingguy.redis
+- src: geerlingguy.repo-epel
+- src: geerlingguy.rabbitmq
+- src: geerlingguy.elasticsearch
+- src: geerlingguy.kibana

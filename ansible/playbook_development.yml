@@ -4,17 +4,30 @@
   become: true
   become_user: root
   roles:
-    - role: geerlingguy.ntp
-      ntp_timezone: Europe/Madrid
+      - { role: geerlingguy.ntp, ntp_timezone: Europe/Madrid }
+      - { role: geerlingguy.repo-remi, when: ansible_os_family == 'RedHat' }
+      - { role: geerlingguy.repo-epel, when: ansible_os_family == 'RedHat' }
+      - { role: geerlingguy.apache, apache_enable_repo: "remi", apache_listen_ip: "*", apache_listen_port: 80, apache_listen_port_ssl: 443}
+      - { role: geerlingguy.git }
+      - { role: geerlingguy.php-versions }
+      - { role: geerlingguy.php, php_version: '7.2', php_use_managed_ini: false, php_packages: [php, php-cli, php-common, php-mbstring, php-pecl-xdebug, php-bcmath], php_display_errors: "On" }
+      - { role: geerlingguy.composer }
+      - { role: ferrarimarco.nano }
+      - { role: geerlingguy.java, java_packages: [java-1.8.0-openjdk] }
+      - { role: geerlingguy.mysql, mysql_enablerepo: "remi,epel" }
+      - { role: geerlingguy.blackfire }
+      - { role: geerlingguy.redis, redis_bind_interface: 0.0.0.0 }
+      - { role: geerlingguy.elasticsearch }
+      - { role: geerlingguy.kibana }
+      - { role: rockandska.erlang, erlang_series: 19 }
+      - { role: geerlingguy.rabbitmq, rabbitmq_version: "3.6.16" }
 
-    - { role: geerlingguy.apache }
-    - { role: geerlingguy.firewall }
+  post_tasks:
+    - name: (RabbitMQ) enable management plugin
+      sudo: yes
+      shell: rabbitmq-plugins enable rabbitmq_management
 
-    - role: geerlingguy.repo-remi
-      when: ansible_os_family == 'RedHat'
+    - name: (RabbitMQ) create admin user
+      sudo: yes
+      shell: rabbitmqctl add_user admin admin && rabbitmqctl set_user_tags admin administrator && rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 
-    - { role: geerlingguy.php-versions }
-    - { role: geerlingguy.php }
-    - { role: geerlingguy.composer }
-
-    - { role: geerlingguy.mysql }
